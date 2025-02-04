@@ -1,5 +1,5 @@
 const {loginController} = require('../../controllers/auth');
-const User = require("../../models/models").User;
+const {User} = require("../../models/User");
 const bcrypt = require("bcryptjs");
 const { mockRequest, mockResponse } = require("jest-mock-req-res");
 const jwt = require("jsonwebtoken")
@@ -10,7 +10,7 @@ const response = {
 };
 
 
-jest.mock('../../models/models', () => ({
+jest.mock('../../models/User', () => ({
   User: {
     create: jest.fn(), 
     findOne: jest.fn(), 

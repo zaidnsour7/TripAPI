@@ -1,6 +1,6 @@
 const {getUserIdFromJWT} = require("../helper");
 const { validateDriverState} = require('../validators/driver');
-const User = require("../models/models").User;
+const {User} = require("../models/User");
 
 
 async function changeDriverStateController (req, res){

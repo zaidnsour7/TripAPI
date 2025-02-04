@@ -1,11 +1,11 @@
 const {registerController} = require('../../controllers/auth');
-const User = require("../../models/models").User;
+const {User} = require("../../models/User");
 const bcrypt = require("bcryptjs");
 const { mockRequest, mockResponse } = require("jest-mock-req-res");
 
 const response = mockResponse();
 
-jest.mock('../../models/models', () => ({
+jest.mock('../../models/User', () => ({
   User: {
     create: jest.fn(), 
     findOne: jest.fn(), 

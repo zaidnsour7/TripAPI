@@ -2,31 +2,6 @@ const  DataTypes = require("sequelize");
 const sequelize = require("../database");
 
 
-const User = sequelize.define("User", {
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  phone: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  role: {
-    type: DataTypes.ENUM("rider", "driver"),
-    allowNull: false,
-  },
-  driverState: {
-    type: DataTypes.ENUM("offline", "online", "busy"),
-    allowNull: true,
-  },
-});
-
-
 const Trip = sequelize.define("Trip", {
   id: {
     type: DataTypes.INTEGER,
@@ -60,12 +35,14 @@ const Trip = sequelize.define("Trip", {
   try {
 
     await sequelize.sync(); 
-    console.log("models synced.");
+    console.log("Trip model synced.");
   } 
   catch (error) {
-    console.error("Error syncing the models:", error);
+    console.error("Error syncing the Trip model:", error);
     process.exit(1);
   }
 })();
 
-module.exports = {User, Trip};
+
+
+module.exports = {Trip};

@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const User = require("../models/models").User;
+const {User} = require("../models/User");
 const { validateName, validatePhone, validatePassword, validateRole } = require('../validators/auth');
 const jwt = require("jsonwebtoken");
 

@@ -1,5 +1,5 @@
 const{changeDriverStateController} = require("../../controllers/driver");
-const User = require("../../models/models").User;
+const {User} = require("../../models/User");
 const bcrypt = require("bcryptjs");
 const { mockResponse } = require("jest-mock-req-res");
 const jwt = require("jsonwebtoken");
@@ -15,7 +15,7 @@ jest.mock('../../helper', () => ({
   getUserIdFromJWT: jest.fn()
 }));
 
-jest.mock('../../models/models', () => ({
+jest.mock('../../models/User', () => ({
   User: {
     create: jest.fn(), 
     findOne: jest.fn(), 

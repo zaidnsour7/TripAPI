@@ -1,6 +1,6 @@
 const{createTripController} = require("../../controllers/trip");
-const User = require("../../models/models").User;
-const Trip = require("../../models/models").Trip;
+const {User} = require("../../models/User");
+const {Trip} = require("../../models/Trip");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {getUserIdFromJWT} = require("../../helper");
@@ -15,11 +15,17 @@ jest.mock('../../helper', () => ({
   getUserIdFromJWT: jest.fn()
 }));
 
-jest.mock('../../models/models', () => ({
+
+
+jest.mock('../../models/User', () => ({
   User: {
     create: jest.fn(), 
     findOne: jest.fn(), 
   },
+}));
+
+
+jest.mock('../../models/Trip', () => ({
   Trip: {
     create: jest.fn(), 
     findOne: jest.fn(), 

@@ -1,5 +1,6 @@
-const User = require("../models/models").User;
-const Trip = require("../models/models").Trip;
+const {User} = require("../models/User");
+const {Trip} = require("../models/Trip");
+
 const {getUserIdFromJWT} = require("../helper");
 const {validateCoordinates} = require("../validators/trip");
 const { Op } = require("sequelize");
