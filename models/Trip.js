@@ -27,6 +27,10 @@ const Trip = sequelize.define("Trip", {
   state: {
     type: DataTypes.ENUM("created", "no_driver_found", "accepted", "canceled", "started", "completed"),
     allowNull: false,
+  },
+  cancellationReason: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   }
 });
 
