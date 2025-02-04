@@ -7,10 +7,12 @@ app.use(express.json());
 const authRoutes = require("./routes/auth");
 const driverRoutes = require("./routes/driver");
 const tripRoutes = require("./routes/trip");
+const riderRoutes = require("./routes/rider");
 
 app.use("/auth", authRoutes);
 app.use("/driver", driverRoutes);
 app.use("/trip", tripRoutes);
+app.use("/rider", riderRoutes);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

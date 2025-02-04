@@ -27,4 +27,6 @@ logs
 
 #DB
 
-.sqlite
+database/database.sqlite
+
+trippushnotification-firebase-adminsdk-fbsvc-26a980ec6b.json

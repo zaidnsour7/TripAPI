@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 
 async function registerController(req, res){
-  const { name, phone, password, role } = req.body;
+  const { name, phone, password, role , devicePushToken} = req.body;
   if (!name || !phone || !password || !role)
     return res.status(400).json({ message: "Missing required fields: name, phone, password, or role" });
 
@@ -32,7 +32,7 @@ async function registerController(req, res){
     if (userExists) return res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({ name, phone, password: hashedPassword, role });
+    await User.create({ name, phone, password: hashedPassword, role, devicePushToken });
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {

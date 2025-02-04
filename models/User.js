@@ -24,6 +24,10 @@ const User = sequelize.define("User", {
     type: DataTypes.ENUM("offline", "online", "busy"),
     allowNull: true,
   },
+  devicePushToken: { 
+    type: DataTypes.STRING, 
+    allowNull: true 
+  }
 });
 
 

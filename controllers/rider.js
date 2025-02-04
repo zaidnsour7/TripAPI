@@ -2,6 +2,8 @@ const {getUserIdFromJWT} = require("../helper");
 const {User} = require("../models/User");
 const {Trip} = require("../models/Trip");
 const { validatecancellationReason} = require('../validators/rider');
+const {notifyDriverWithTripCancellation} = require("../notifications/driver");
+const { Op } = require("sequelize");
 
 
 async function cancelTripController (req, res){
@@ -11,7 +13,7 @@ async function cancelTripController (req, res){
     return res.status(400).json({ message: "Missing cancellation Reason." });
   }
 
-  const cancellationReasonValidation = validatecancellationReason.validate(state);
+  const cancellationReasonValidation = validatecancellationReason.validate(cancellationReason);
 
   if(cancellationReasonValidation.error)
     return res.status(400).json({ message: "Invalid cancellation Reason." });
@@ -37,12 +39,16 @@ async function cancelTripController (req, res){
     const driver =  await User.findOne({ where: { id:driverId} });
     if (! driver) return res.status(404).json({ message: "Driver not found." });
 
+    const devicePushToken = driver.devicePushToken
+    if (! devicePushToken) return res.status(404).json({ message: "device Push Token not found." });
+
     trip.state = "canceled";
     trip.cancellationReason = cancellationReason;
     await trip.save();
 
-    //notifyRiderWithTripCancellation();
+    notifyDriverWithTripCancellation(devicePushToken);
     driver.driverState = "online";
+    await driver.save();
   
     res.status(200).json({ message: "Rider Cancelled Trip successfully." });
   } catch (err) {
