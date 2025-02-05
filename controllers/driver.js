@@ -1,4 +1,3 @@
-const {getUserIdFromJWT} = require("../helper");
 const { validateDriverState} = require('../validators/driver');
 const {User} = require("../models/User");
 
@@ -16,8 +15,7 @@ async function changeDriverStateController (req, res){
     return res.status(400).json({ message: "Invalid driver State." });
 
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    const driverId = await getUserIdFromJWT(token);
+    const driverId = req.user.id;
     const driver =  await User.findOne({ where: { id:driverId } });
     if (!driver) return res.status(404).json({ message: "Driver not found." });
 
