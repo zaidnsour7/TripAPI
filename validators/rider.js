@@ -18,10 +18,17 @@ const validateCoordinates = Joi.object({
   }).required(),
 });
 
-const validatecancellationReason = Joi.string().min(10).max(100);
+const validatecancellationReason = Joi.string().min(10).max(100).required();
 
 
-module.exports = {
-  validateCoordinates,
-  validatecancellationReason
-};
+
+const createTripSchema = validateCoordinates;
+
+
+
+const cancelTripSchema = Joi.object({
+  cancellationReason: validatecancellationReason.required()
+});
+
+
+module.exports = {createTripSchema, cancelTripSchema};

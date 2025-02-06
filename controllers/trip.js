@@ -1,23 +1,9 @@
-const { validateTripAction } = require('../validators/trip');
 const { Trip, User } = require("../models/Trip");
 const { handlePushNotification } = require('../notifications/index');
 const { tripActor } = require('../states/tripStateMachine');
 
 async function changeTripStateController(req, res) {
   const { action, tripId, devicePushToken } = req.body;
-
-  if (!action) {
-      return res.status(400).json({ message: "Action is required to change the state." });
-  }
-
-  if (!tripId) {
-      return res.status(400).json({ message: "Missing Trip Id." });
-  }
-
-  const actionValidation = validateTripAction.validate(action);
-
-  if (actionValidation.error)
-      return res.status(400).json({ message: "Invalid Action." });
 
   try {
       const trip = await Trip.findOne({ where: { id: tripId } });

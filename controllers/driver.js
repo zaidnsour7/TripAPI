@@ -5,15 +5,6 @@ const {User} = require("../models/User");
 async function changeDriverStateController (req, res){
   const { state } = req.body;
 
-  if ( !state ) {
-    return res.status(400).json({ message: "Missing driver state." });
-  }
-
-  const stateValidation = validateDriverState.validate(state);
-
-  if(stateValidation.error)
-    return res.status(400).json({ message: "Invalid driver State." });
-
   try {
     const driverId = req.user.id;
     const driver =  await User.findOne({ where: { id:driverId } });

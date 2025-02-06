@@ -1,48 +1,53 @@
 const Joi = require('joi');
 
 
-const validateName = Joi.string().min(2).max(30);
+const validateName = Joi.string().min(2).max(30).required();
+const validatePhone = Joi.string().min(9).max(14).pattern(/^[0-9]+$/).required();
+const validateRole = Joi.string().valid("rider", "driver").required();
 
-const validatePhone = Joi.string().min(9).max(14).pattern(/^[0-9]+$/);
+// Custom password validation function
+const validatePassword = (value, helpers) => {
+  const errors = [];
 
-const validatePassword = (value) => {
-  // Check if password is empty
   if (!value) {
-    return { isValid: false, message: 'Please enter your password' };
+    errors.push("Please enter your password");
+  } else {
+    if (value.length < 8) {
+      errors.push("Password must be at least 8 characters");
+    }
+    if (!/[A-Z]/.test(value)) {
+      errors.push("Password must contain at least one uppercase letter");
+    }
+    if (!/[0-9]/.test(value)) {
+      errors.push("Password must contain at least one number");
+    }
+    if (!/[!@#$%^&*(),.?\":{}|<>_]/.test(value)) {
+      errors.push("Password must contain at least one special character");
+    }
   }
 
-  // Check for minimum length (8 characters)
-  if (value.length < 8) {
-    return { isValid: false, message: 'Password must be at least 8 characters' };
+  if (errors.length > 0) {
+    return helpers.message(errors.join(", "));
   }
 
-  // Check if password contains at least one uppercase letter
-  if (!/[A-Z]/.test(value)) {
-    return { isValid: false, message: 'Password must contain at least one uppercase letter' };
-  }
-
-  // Check if password contains at least one number
-  if (!/[0-9]/.test(value)) {
-    return { isValid: false, message: 'Password must contain at least one number' };
-  }
-
-  // Check if password contains at least one special character
-  if (!/[!@#$%^&*(),.?":{}|<>_]/.test(value)) {
-    return { isValid: false, message: 'Password must contain at least one special character' };
-  }
-
-  // If all validations pass
-  return { isValid: true, message: ' ' };
+  return value; 
 };
 
+const userRegisterSchema = Joi.object({
+  name: validateName,
+  phone: validatePhone,
+  role: validateRole,
+  password: Joi.string().custom(validatePassword).required(),
+});
 
-const validateRole = Joi.string().valid('rider', 'driver');
-
+const userLoginSchema = Joi.object({
+  phone: validatePhone,
+  password: Joi.string().custom(validatePassword).required()
+});
 
 
 module.exports = {
-  validateName,
-  validatePhone,
-  validatePassword,
-  validateRole
+  userRegisterSchema,
+  userLoginSchema
+
 };

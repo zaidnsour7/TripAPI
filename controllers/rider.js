@@ -1,6 +1,5 @@
 const {User} = require("../models/User");
 const {Trip} = require("../models/Trip");
-const { validatecancellationReason, validateCoordinates} = require('../validators/rider');
 const {handlePushNotification} = require("../notifications/index");
 const { Op } = require("sequelize");
 
@@ -8,15 +7,6 @@ const { Op } = require("sequelize");
 async function createTripController (req, res) {
   const { pickupLocation, dropoffLocation } = req.body;
 
-  if ( ! pickupLocation|| ! dropoffLocation) {
-    return res.status(400).json({ message: "Pickup location or drop-off location is missing."});
-  }
-
-
-  const coordinatesValidation = validateCoordinates.validate({ pickupLocation, dropoffLocation });
-  if (coordinatesValidation.error) 
-    return res.status(400).json({ message: "Invalid coordinates provided." });
-   
   try {
     const riderId = req.user.id;
     const rider =  await User.findOne({ where: { id:riderId } });
@@ -63,15 +53,6 @@ async function createTripController (req, res) {
 
 async function cancelTripController (req, res){
   const { cancellationReason} = req.body;
-
-  if ( !cancellationReason ) {
-    return res.status(400).json({ message: "Missing cancellation Reason." });
-  }
-
-  const cancellationReasonValidation = validatecancellationReason.validate(cancellationReason);
-
-  if(cancellationReasonValidation.error)
-    return res.status(400).json({ message: "Invalid cancellation Reason." });
 
   try {
     const riderId = req.user.id;
