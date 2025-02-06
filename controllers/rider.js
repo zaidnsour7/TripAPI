@@ -1,8 +1,7 @@
-const {getUserIdFromJWT} = require("../helper");
 const {User} = require("../models/User");
 const {Trip} = require("../models/Trip");
 const { validatecancellationReason, validateCoordinates} = require('../validators/rider');
-const {notifyDriverWithTripCancellation} = require("../notifications/driver");
+const {handlePushNotification} = require("../notifications/index");
 const { Op } = require("sequelize");
 
 
@@ -22,23 +21,16 @@ async function createTripController (req, res) {
     const riderId = req.user.id;
     const rider =  await User.findOne({ where: { id:riderId } });
 
-    // handle this case because jwt is stateless  
     if (!rider) return res.status(404).json({ message: "Rider not found." });
-
 
     const driver = await User.findOne({
       where: { role: "driver" , driverState:"online"},
       });
 
-   
-    if (rider.role !== "rider") {
-      return res.status(403).json({ message: "Access denied, Insufficient permissions." });
-    }
-
     const exsitingTrip = await Trip.findOne({
       where: { 
         riderId,
-        state: { [Op.or]: ["created","accepted","started"] }
+        state: { [Op.or]: ["created","accepted","arrived","started"] }
       }
     });
 
@@ -104,11 +96,12 @@ async function cancelTripController (req, res){
     const devicePushToken = driver.devicePushToken
     if (! devicePushToken) return res.status(404).json({ message: "device Push Token not found." });
 
-    trip.state = "canceled";
+    const tripState = "canceled"
+    trip.state = tripState;
     trip.cancellationReason = cancellationReason;
     await trip.save();
 
-    notifyDriverWithTripCancellation(devicePushToken);
+    handlePushNotification(tripState, devicePushToken)
     driver.driverState = "online";
     await driver.save();
   

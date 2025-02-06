@@ -1,10 +1,6 @@
 const Joi = require('joi');
 
 
-
-// Trip state validation
-const validateTripState = Joi.string().valid('created', 'no_driver_found', 'accepted', 'finished');
-
 // Longitude validation
 const validateLongitude = Joi.number().min(-180).max(180);
 
@@ -26,8 +22,6 @@ const validatecancellationReason = Joi.string().min(10).max(100);
 
 
 module.exports = {
-  validateTripState,
   validateCoordinates,
   validatecancellationReason
-  
 };

@@ -1,6 +1,9 @@
 const express = require("express");
 const { authMiddleware, roleMiddleware } = require("../middleware/auth");
-const{changeDriverStateController, driverDashboardController} = require("../controllers/driver")
+const{
+      changeDriverStateController, 
+      driverDashboardController,
+   } = require("../controllers/driver")
 
 const router = express.Router();
 
