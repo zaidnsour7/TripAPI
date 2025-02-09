@@ -1,6 +1,6 @@
 const  DataTypes = require("sequelize");
 const sequelize = require("../database");
-
+const {States} = require("../enums/states");
 
 const Trip = sequelize.define("Trip", {
   id: {
@@ -25,7 +25,8 @@ const Trip = sequelize.define("Trip", {
     allowNull: false,
   },
   state: {
-    type: DataTypes.ENUM("created", "no_driver_found", "accepted", "canceled", "arrived", "started", "completed"),
+    type: DataTypes.ENUM(States.CREATED, States.NO_DRIVER_FOUND, States.ACCEPTED, States.CANCELED,
+      States.ARRIVED, States.STARTED, States.COMPLETED),
     allowNull: false,
   },
   cancellationReason: {

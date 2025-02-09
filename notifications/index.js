@@ -53,6 +53,7 @@ async function sendPushNotification(devicePushToken, title, body){
     }
   })
 }
+
 /*
 async function updateDeviceToken(req, res) {
   const { userId, devicePushToken } = req.body;

@@ -1,20 +1,20 @@
 const { createMachine, createActor } = require('xstate');
-
+const {States} = require("../enums/states")
 
 const tripMachine = createMachine({
     id: 'trip',
-    initial: 'created', 
+    initial: States.CREATED, 
     states: {
         created: {
             on: {
-                ACCEPT: 'accepted',
-                NO_DRIVER: 'no_driver_found',
+                ACCEPT: States.ACCEPTED,
+                NO_DRIVER: States.NO_DRIVER_FOUND,
             },
         },
         accepted: {
             on: {
-                ARRIVE: 'arrived',
-                CANCEL: 'canceled', 
+                ARRIVE: States.ARRIVED,
+                CANCEL: States.CANCELED, 
             },
         },
         no_driver_found: {
@@ -22,14 +22,14 @@ const tripMachine = createMachine({
         },
         arrived: {
             on: {
-                START: 'started', 
-                CANCEL: 'canceled'
+                START: States.STARTED, 
+                CANCEL: States.CANCELED
             },
         },
         started: {
             on: {
-                COMPLETE: 'completed', 
-                CANCEL: 'canceled', 
+                COMPLETE: States.COMPLETED, 
+                CANCEL: States.CANCELED, 
             },
         },
         completed: {

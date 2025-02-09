@@ -6,7 +6,6 @@ const {createTripSchema, cancelTripSchema} = require("../validators/rider");
 
 const router = express.Router();
 
-
 router.post("/create-trip", authMiddleware, roleMiddleware("rider"),
 validateRequest(createTripSchema), createTripController);
 

@@ -1,6 +1,8 @@
-const { Trip, User } = require("../models/Trip");
+const { Trip} = require("../models/Trip");
+const { User} = require("../models/User");
 const { handlePushNotification } = require('../notifications/index');
 const { tripActor } = require('../states/tripStateMachine');
+const {States} = require("../enums/states");
 
 async function changeTripStateController(req, res) {
   const { action, tripId, devicePushToken } = req.body;
@@ -13,13 +15,13 @@ async function changeTripStateController(req, res) {
 
       const currentState = trip.state;
 
-      if(currentState == "completed")
+      if(currentState == States.COMPLETED)
         return res.status(400).json( { message: "Trip is already completed."} );
 
-      else if(currentState == "canceled")
+      else if(currentState == States.CANCELED)
         return res.status(400).json( { message: "Trip is already canceled."} );
 
-      else if(currentState == "no_driver_found")
+      else if(currentState == States.NO_DRIVER_FOUND)
         return res.status(400).json( { message: "there isn't available driver."} );
 
       tripActor.subscribe((state) => {
@@ -36,7 +38,7 @@ async function changeTripStateController(req, res) {
 
       handlePushNotification(newState, devicePushToken);
 
-      if(newState == "canceled" || newState == "completed"){
+      if( newState == States.CANCELED || newState == States.COMPLETED ){
         const driverId = trip.driverId;
         const driver = await User.findOne( { where: { id: driverId} } );
         driver.driverState = "online";

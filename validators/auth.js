@@ -1,9 +1,11 @@
 const Joi = require('joi');
+const {Roles} = require("../enums/roles")
 
 
 const validateName = Joi.string().min(2).max(30).required();
 const validatePhone = Joi.string().min(9).max(14).pattern(/^[0-9]+$/).required();
-const validateRole = Joi.string().valid("rider", "driver").required();
+const validateRole = Joi.string().valid(Roles.RIDER, Roles.DRIVER).required();
+const validateDevicePushToken = Joi.string().min(30).max(200).required();
 
 // Custom password validation function
 const validatePassword = (value, helpers) => {
@@ -38,6 +40,8 @@ const userRegisterSchema = Joi.object({
   phone: validatePhone,
   role: validateRole,
   password: Joi.string().custom(validatePassword).required(),
+  devicePushToken: validateDevicePushToken
+
 });
 
 const userLoginSchema = Joi.object({

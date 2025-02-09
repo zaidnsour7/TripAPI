@@ -1,5 +1,7 @@
 const  DataTypes = require("sequelize");
 const sequelize = require("../database");
+const {Roles} = require("../enums/roles");
+const {DriverStates} = require("../enums/driverStates");
 
 
 const User = sequelize.define("User", {
@@ -17,11 +19,11 @@ const User = sequelize.define("User", {
     allowNull: false,
   },
   role: {
-    type: DataTypes.ENUM("rider", "driver"),
+    type: DataTypes.ENUM(Roles.RIDER, Roles.DRIVER),
     allowNull: false,
   },
   driverState: {
-    type: DataTypes.ENUM("offline", "online", "busy"),
+    type: DataTypes.ENUM(DriverStates.OFFLINE, DriverStates.ONLINE, DriverStates.BUSY),
     allowNull: true,
   },
   devicePushToken: { 

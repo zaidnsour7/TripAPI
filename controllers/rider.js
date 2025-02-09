@@ -2,6 +2,7 @@ const {User} = require("../models/User");
 const {Trip} = require("../models/Trip");
 const {handlePushNotification} = require("../notifications/index");
 const { Op } = require("sequelize");
+const {States} = require("../enums/states");
 
 
 async function createTripController (req, res) {
@@ -20,7 +21,7 @@ async function createTripController (req, res) {
     const exsitingTrip = await Trip.findOne({
       where: { 
         riderId,
-        state: { [Op.or]: ["created","accepted","arrived","started"] }
+        state: { [Op.or]: [States.CREATED, States.ACCEPTED, States.ARRIVED, States.STARTED] }
       }
     });
 
@@ -28,11 +29,11 @@ async function createTripController (req, res) {
       return res.status(400).json({ message: "Rider already part of an active trip." });
       }
       
-    let state = "no_driver_found";
+    let state = States.NO_DRIVER_FOUND;
 
     if (driver){
       const driverId = driver.id;
-      state = "created";
+      state = States.CREATED;
       driver.driverState = "busy";
 
       await driver.save();
@@ -62,7 +63,7 @@ async function cancelTripController (req, res){
     const trip = await Trip.findOne({
           where: { 
             riderId,
-            state: { [Op.or]: ["created","accepted","started"] }
+            state: { [Op.or]: [States.CREATED, States.ACCEPTED, States.ARRIVED, States.STARTED] }
           }
         });
     
@@ -77,7 +78,7 @@ async function cancelTripController (req, res){
     const devicePushToken = driver.devicePushToken
     if (! devicePushToken) return res.status(404).json({ message: "device Push Token not found." });
 
-    const tripState = "canceled"
+    const tripState = States.CANCELED;
     trip.state = tripState;
     trip.cancellationReason = cancellationReason;
     await trip.save();

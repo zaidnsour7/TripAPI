@@ -1,6 +1,6 @@
-const { validateDriverState} = require('../validators/driver');
 const {User} = require("../models/User");
-
+const {Trip} = require("../models/Trip");
+const {States} = require("../enums/states");
 
 async function changeDriverStateController (req, res){
   const { state } = req.body;
@@ -26,7 +26,7 @@ async function acceptTripController(req, res){
     if (!driver) return res.status(404).json({ message: "Driver not found." });
 
     const trip = await Trip.findOne({
-      where: {driverId,state: "created"}
+      where: {driverId,state: States.CREATED}
     });
 
     if(!trip)
@@ -38,7 +38,7 @@ async function acceptTripController(req, res){
     const devicePushToken = rider.devicePushToken
       if (! devicePushToken) return res.status(404).json({ message: "device Push Token not found." });
 
-    const tripState = "canceled"  
+    const tripState = States.ACCEPTED;  
     trip.state = tripState;
     await trip.save();
     handlePushNotification(tripState, devicePushToken)
@@ -49,7 +49,6 @@ async function acceptTripController(req, res){
     res.status(500).json({ message: "Server error while Driver try to accept the Trip", error: err.message });
   }
 }
-
 
 
 function driverDashboardController (req, res) {
